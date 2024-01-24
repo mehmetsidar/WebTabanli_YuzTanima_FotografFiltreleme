@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yüz Tanıma Uygulaması</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+body {
+   
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-image: url('j.jpg');
+
+}
+
+#recognized-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#recognized-image {
+    max-width: 500px; /* İsteğe bağlı olarak genişliği sınırlayabilirsiniz */
+}
+
+#recognized-image-container button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+
+</style>
+</head>
+<body>
+    <h1>Yüz Tanıma Uygulaması</h1>
+
+    <form id="upload-form" action="/" method="post" enctype="multipart/form-data">
+        <label for="file">Yüzünü Gönder:</label>
+        <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png" required>
+        <button type="button" onclick="uploadFile()">Tara</button>
+    </form>
+
+   <!-- <div id="result-container">
+       
+    </div>-->
+
+    <div id="uploaded-image-container">
+        <!-- Yüklenen fotoğraf burada görüntülenecek -->
+        <h2>Yüklenen Fotoğraf:</h2>
+        <img id="uploaded-image" src="" alt="Uploaded Image" style="max-width: 500px; display: none;">
+    </div>
+
+    <div id="recognized-image-container" style="display: none;">
+        <!-- Tanıma sonucu oluşan görüntü burada görüntülenecek -->
+        <h2>Tanıma Sonucu:</h2>
+        <img id="recognized-image" src=""  alt="Recognized Image" style="max-width: 500px;">
+        <button type="button" onclick="downloadResultImage()">Sonuçu İndir</button>
+    </div>
+
+   <!-- <div id="new-face-container" style="display: none;">
+ 
+        <h2>Yeni Yüz Ekle:</h2>
+        <label for="new-face-name">İsim:</label>
+        <input type="text" id="new-face-name" placeholder="Yeni Yüz İsmi">
+        <button type="button" onclick="addNewFace()">Yeni Yüz Ekle</button>
+    </div>-->
+
+    <script>
+        function uploadFile() {
+            var formData = new FormData($("#upload-form")[0]);
+
+            $.ajax({
+                type: 'POST',
+                url: '/',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    showResults(data);
+                },
+                error: function(error) {
+                    console.log("Hata:", error);
+                }
+            });
+        }
+
+        function showResults(data) {
+            // Sonuçları HTML içerisine yerleştir
+            $("#result-container").empty();
+            $("#uploaded-image").attr("src", data.image_path);  // Yüklenen fotoğrafı göster
+            $("#uploaded-image").show();  // Görüntüyü göster
+
+            if (data.recognized_faces.length > 0) {
+                $("#result-container").append("<h2>Tanıma Sonuçları:</h2>");
+                $("#result-container").append("<ul>");
+                $.each(data.recognized_faces, function(index, face) {
+                    $("#result-container").append("<li>" + face.name + " - " + face.top + ", " + face.right + ", " + face.bottom + ", " + face.left + "</li>");
+                });
+                $("#result-container").append("</ul>");
+                
+                // Tanıma sonucu oluşan görüntüyü göster
+                $("#recognized-image").attr("src", data.recognized_image_path);
+                
+                $("#recognized-image-container").show();
+
+                // Yeni yüz ekleme formunu göster
+                $("#new-face-container").show();
+            }
+        }
+
+        // Yeni yüz eklemek için fonksiyon
+        function addNewFace() {
+            var newFaceName = $("#new-face-name").val();
+            if (newFaceName.trim() === "") {
+                alert("Lütfen bir isim girin.");
+                return;
+            }
+
+            // Tanıma sonuçlarından gelen folder_name değerini kullanarak yeni yüz ekleyin
+            var folderName = data.recognized_faces[0].folder_name;
+            $.ajax({
+                type: 'POST',
+                url: '/add_new_face',
+                data: JSON.stringify({ name: newFaceName, folder_name: folderName }),
+                contentType: 'application/json',
+                success: function(data) {
+                    alert(data.message);
+
+                    // Ekleme işlemi tamamlandıktan sonra sayfayı sıfırla
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log("Hata:", error);
+                    alert('Yüz ekleme sırasında bir hata oluştu.');
+                }
+            });
+        }
+
+        // Fonksiyon: Tanıma sonucu oluşan görüntüyü indirme
+        function downloadResultImage() {
+            var imageUrl = $("#recognized-image").attr("src");
+            var link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = 'recognized_image.jpg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Dosya seçildiğinde önizleme yap
+        $("#file").change(function() {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#uploaded-image").attr("src", e.target.result);
+                    $("#uploaded-image").show();  // Görüntüyü göster
+                    $("#recognized-image-container").hide();  // Tanıma sonucu görüntüyü gizle
+                    $("#new-face-container").hide();  // Yeni yüz ekleme formunu gizle
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>

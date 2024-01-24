@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Filter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+body {
+
+      font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-image: url('m.jpg');
+
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+     background-image: url('ss.jpg');
+}
+
+input[type="file"] {
+    margin-bottom: 10px;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.result {
+    margin-top: 20px;
+}
+
+#filtered-image {
+    max-width: 20%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+
+
+}
+</style>
+
+   <div class="container">
+        <form id="filter-form" enctype="multipart/form-data" method="post" action="/process" onsubmit="return false;">
+            <input type="file" id="image-input" name="image" accept="image/*" onchange="previewImage()">
+            <div class="controls">
+                <label for="hue">Hue:</label>
+                <input type="range" id="hue" name="hue" min="-180" max="180" value="0" step="1">
+                <label for="saturation">Saturation:</label>
+                <input type="range" id="saturation" name="saturation" min="0" max="2" value="1" step="0.01">
+                <label for="lightness">Lightness:</label>
+                <input type="range" id="lightness" name="lightness" min="0" max="2" value="1" step="0.01">
+            </div>
+            <button onclick="applyFilter()">FİLTRELEME YAP</button>
+        </form>
+        <a id="download-link" style="display:none;" href="{{ result }}" download>FOTORAFI İNDİR</a>
+        <div class="result">
+            <img id="filtered-image" alt="Filtered Image">
+        </div>
+    </div>
+
+
+
+    <script >
+
+    function previewImage() {
+    var input = document.getElementById('image-input');
+    var preview = document.getElementById('filtered-image');
+    var downloadLink = document.getElementById('download-link');
+    preview.style.display = 'none';
+    downloadLink.style.display = 'none';
+
+    var file = input.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function applyFilter() {
+    var hue = document.getElementById('hue').value;
+    var saturation = document.getElementById('saturation').value;
+    var lightness = document.getElementById('lightness').value;
+
+    var preview = document.getElementById('filtered-image');
+    var downloadLink = document.getElementById('download-link');
+
+    // Orijinal resmin boyutlarını al
+    var originalWidth = preview.naturalWidth;
+    var originalHeight = preview.naturalHeight;
+
+    // Filtreleri uygula
+    preview.style.filter = `hue-rotate(${hue}deg) saturate(${saturation}) brightness(${lightness})`;
+
+    // Yeni bir canvas oluştur
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+
+    // Canvas boyutlarını orijinal resmin boyutlarına eşitle
+    canvas.width = originalWidth;
+    canvas.height = originalHeight;
+
+    // Filtrelenmiş resmi canvas'a çiz
+    context.filter = `hue-rotate(${hue}deg) saturate(${saturation}) brightness(${lightness})`;
+    context.drawImage(preview, 0, 0, originalWidth, originalHeight);
+
+    // Canvas'tan veriyi al ve indirme bağlantısına ekle
+    var dataURL = canvas.toDataURL('image/jpeg');
+    downloadLink.href = dataURL;
+    downloadLink.style.display = 'block';
+
+    // Generate a unique filename using current timestamp
+    var timestamp = new Date().getTime();
+    var filename = 'filtered_image_' + timestamp + '.jpg';
+
+    downloadLink.download = filename;
+}
+
+
+
+    </script>
+</body>
+</html>

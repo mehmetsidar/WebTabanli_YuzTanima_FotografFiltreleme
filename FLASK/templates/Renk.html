@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farklı Sayfa</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<style>
+body {
+font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-image: url('mmm.jpg');
+
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+}
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+     background-image: url('gm.jpg');
+}
+
+.farkli-sayfa {
+    text-align: center;}
+</style>
+    <div class="container" >
+        <section class="farkli-sayfa">
+            <h1>Fotoraf Filtreleme</h1>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <p>Lütfen Bir Fotoraf Yükleyiniz</p>
+                <input type="file" name="photo" accept="image/*">
+            </form>
+            <div class="image-container">
+                <img id="imagePreview" class="image-preview" src="" alt="Fotoğraf">
+            </div>
+            <p>Renk Filtrelemesi:</p>
+            <div id="colorFilters">
+                <label>
+                    <input type="range" class="color-filter" data-color="Red" min="-255" max="255" value="0">
+                    <span>Kırmızı (Red): <span id="redValue">#000000</span></span>
+                </label>
+                <label>
+                    <input type="range" class="color-filter" data-color="Green" min="-255" max="255" value="0">
+                    <span>Yeşil (Green): <span id="greenValue">#000000</span></span>
+                </label>
+                <label>
+                    <input type="range" class="color-filter" data-color="Blue" min="-255" max="255" value="0">
+                    <span>Mavi (Blue): <span id="blueValue">#000000</span></span>
+                </label>
+            </div>
+            <button id="filterButton" class="filter-button">Filtrele</button>
+            <a id="downloadButton" class="download-button" download="filtered_image.jpg" href="/download">İndir</a>
+        </section>
+    </div>
+    <script>
+        const photoUpload = document.querySelector('input[type="file"]');
+        const imagePreview = document.getElementById("imagePreview");
+        const filterButton = document.getElementById("filterButton");
+        const downloadButton = document.getElementById("downloadButton");
+        const colorFilters = document.querySelectorAll(".color-filter");
+        const redValue = document.getElementById("redValue");
+        const greenValue = document.getElementById("greenValue");
+        const blueValue = document.getElementById("blueValue");
+        let originalImage = new Image();
+        photoUpload.addEventListener("change", function () {
+            const file = photoUpload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    originalImage.src = e.target.result;
+                    originalImage.onload = function () {
+                        resizeAndCenterImage();
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = "";
+            }
+        });
+
+        filterButton.addEventListener("click", function () {
+            const canvas = document.createElement("canvas");
+            canvas.width = originalImage.width;
+            canvas.height = originalImage.height;
+            const ctx = canvas.getContext("2d");
+            let redFilter = 0;
+            let greenFilter = 0;
+            let blueFilter = 0;
+            colorFilters.forEach(filter => {
+                const color = filter.dataset.color;
+                const value = parseInt(filter.value);
+                if (color === "Red") {
+                    redFilter = value;
+                    redValue.textContent = `#${(255 + redFilter).toString(16).slice(1)}0000`;
+                } else if (color === "Green") {
+                    greenFilter = value;
+                    greenValue.textContent = `#00${(255 + greenFilter).toString(16).slice(1)}00`;
+                } else if (color === "Blue") {
+                    blueFilter = value;
+                    blueValue.textContent = `#0000${(255 + blueFilter).toString(16).slice(1)}`;
+                }
+            });
+            ctx.drawImage(originalImage, 0, 0);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] += redFilter;     // Kırmızı
+                data[i + 1] += greenFilter; // Yeşil
+                data[i + 2] += blueFilter;  // Mavi
+            }
+            ctx.putImageData(imageData, 0, 0);
+            imagePreview.src = canvas.toDataURL("image/jpeg");
+            downloadButton.href = canvas.toDataURL("image/jpeg");
+        });
+
+        function resizeAndCenterImage() {
+            const maxImageWidth = 500; // Maksimum genişlik
+            const maxImageHeight = 500; // Maksimum yükseklik
+            let width = originalImage.width;
+            let height = originalImage.height;
+            if (width > maxImageWidth || height > maxImageHeight) {
+                const aspectRatio = width / height;
+                if (width > height) {
+                    width = maxImageWidth;
+                    height = width / aspectRatio;
+                } else {
+                    height = maxImageHeight;
+                    width = height * aspectRatio;
+                }
+                imagePreview.style.width = `${width}px`;
+                imagePreview.style.height = `${height}px`;
+            }
+            const container = document.querySelector(".image-container");
+            container.style.display = "flex";
+            container.style.justifyContent = "center";
+            container.style.alignItems = "center";
+            imagePreview.src = originalImage.src;
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

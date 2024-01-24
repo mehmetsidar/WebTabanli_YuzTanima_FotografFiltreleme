@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Arayüzü</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity=
+    "sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+<body>
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url('r.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #fff; /* Metin rengini beyaz olarak ayarladık. */
+  
+}
+
+.renklendirme, .basari-siralama {
+    background-color: grey;
+    padding: 30px;
+    border: 1px solid #ddd;
+    margin: 20px;
+   
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+.ana{
+    background-color: black;
+    padding: 20px;
+    border: 2px solid #ddd;
+    margin: 10px;
+}
+.ekip{
+   justify-content: center;
+   align-items: center;
+
+}
+.ekipresim>img:hover{
+  opacity:0.7;
+}
+.ekip-container{
+     display: flex;
+     gap: 4rem;
+}
+.E{
+  text-align: left;
+}
+
+</style>
+<!-- nevar başlama-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-body-tertiary fixed-top  "><!--fixed-top : yukarıyı sabitler-->
+  <div class="container-fluid ">
+    <a class="navbar-brand" href="#">Görüntü İşleme Sayfası</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">AnaSayfa</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#hakkimizda">Hakkımızda</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#ekibimiz">Proje Ekipi</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- nevar biti-->
+
+    <section class="renklendirme">
+        <h1>RGB Fotoğraf Filtreleme</h1>
+        <button id="renkDegistir">RGB Filtreleme</button>
+    </section>
+    
+       <section class="basari-siralama">
+        <h1>HSV Fotoğraf Flitreleme </h1>
+        <button id="HSVSiralamaGit">HSV Filtreleme</button>
+       
+    </section>
+
+
+    <section class="basari-siralama">
+        <h1>İnsan Yüz Tespiti</h1>
+        <button id="basariSiralamaGit">Yüz Tespiti </button>
+    </section>
+<!--Hakımzada başlangıc-->
+    <section class="renklendirme" id="hakkimizda">
+     <div class="container ">
+     <h2>HAKKIMIZDA</h2>
+     
+     </div>
+     <hr>
+     <div class="E">
+     <p >Renk ve Yüz Analizi Web Sayfası
+Bu web sayfası, renk ve yüz analizi konularına dair bilgiler sunan etkileşimli bir platformdur. Aşağıda, web 
+sayfasının temel özellikleri hakkında bilgi bulabilirsiniz:</p>
+<p>1. RGB Fotoraf Renk Ayırma
+Sayfa, RGB renk modelini kullanarak fotoğraf renklerini ayrıştırmaya odaklanır. Kırmızı, yeşil ve mavi bileşenlerin birleşimiyle oluşan 
+geniş renk spektrumunu keşfedin. Fotoğraftaki renk tonlarını analiz ederek renklerin nasıl ayrıştırıldığını anlayın.</p>
+<p>2. HSV Fotoraf Filtrelem
+HSV renk modeli,ton, doygunluk ve parlaklık bileşenleri ile renkleri ifade eder. Sayfa, bu modeli kullanarak fotoğrafları filtreleyip 
+renk tonlarını ve doygunluğunu daha hassas bir şekilde kontrol etmenin önemini vurgular. İnsan gözüne daha uygun renk paletleri 
+ile nasıl çalışabileceğinizi keşfedin.</p>
+<p>3. İnsan Yüz Tespit
+Web sayfası, gelişmiş algoritmalar kullanarak fotoğraflardaki yüzleri tespit etmeye odaklanır. Yüz tespiti, güvenlik 
+sistemlerinden sanal filtreleme uygulamalarına kadar geniş bir yelpazede kullanılır. Sayfa, bu teknolojinin nasıl çalıştığını ve 
+günlük hayatta nasıl kullanılabileceğini açıklar.</p>
+<p>Bu web sayfası, renk ve yüz analizi konularında hem temel hem de derinlemesine bilgi sunan interaktif bir kaynaktır. 
+Teknolojinin bu ilginç yönlerini keşfetmek için sayfayı ziyaret edin! </p>
+</div>
+    </section>
+<!--Hakımzada bitiş-->
+
+<!--Ekibimiz başlangıc-->
+<section class="renklendirme" id="ekibimiz">
+<div class="container ">
+     <h2>PROJE EKİBİ</h2>
+     </div>
+     <hr>
+ <div  class="ekip-container" >
+  <div class="ekip ekipresim" >
+  <img src="sidar.jpg" style="width: 18rem;" class="card-img-top" alt="..."  >
+  <div class="card-body" style="color:black;" >
+    <h5 class="card-title-renklendirme">Mehmet Sidar</h5>
+    <p>Bilgisayar Mühendisi</p>
+  </div>
+  
+  </div>
+<div class="E">
+Bilgisayar mühendisliğine büyük bir ilgi duyan ve kendimi bu alanda geliştirmeye
+adayan bir öğrenciyim. orta düzey programlama becerilerine sahip, problem çözme
+ve analitik düşünme yeteneklerini kullanarak yaratıcı çözümler üretebilen bir
+bilgisayar mühendisi adayıyım. Üniversite eğitimim süresince edindiğim teorik bilgi
+ve projelerimle pratik deneyimler kazandım.Akademik başarılarım ve projelerimle
+bilgi teknolojileri sektöründe başarılı bir kariyer hedefliyorum.
+
+
+</div>
+
+</div>
+</div>
+     </section>
+<!--Ekibimiz bitiş-->
+    <script>
+        document.getElementById("renkDegistir").addEventListener("click", function() {
+            window.location.href = "Renk.html";
+        });
+
+        document.getElementById("basariSiralamaGit").addEventListener("click", function() {
+            window.location.href = "http://127.0.0.1:5000/";
+        });
+
+         document.getElementById("HSVSiralamaGit").addEventListener("click", function() {
+            window.location.href = "index.html";
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity=
+    "sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity=
+    "sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity=
+    "sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+</body>
+</html>
